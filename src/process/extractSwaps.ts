@@ -1,5 +1,5 @@
 import { Swap } from "../types/Swap";
-import { getLatestSwapTransactions } from "./dfc-api";
+import { getLatestSwapTransactions } from "../query/dfcApi";
 
 const extractDexSwaps = async (lastProcessedBlock?: number): Promise<Swap[]> => {
   const swaps = await getLatestSwapTransactions();

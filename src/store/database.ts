@@ -3,13 +3,31 @@ import leveldown from 'leveldown';
 
 const db = levelup(leveldown('./processed'));
 
+const storeProcessedTxid = async (txid: string, tweetId: string): Promise<void> => {
+  await db.put(txid, tweetId);
+}
+
+const getTweetIdByTxid = async (txid: string): Promise<string | undefined> => {
+  try {
+    const tweetId = await db.get(txid);
+    return tweetId.valueOf().toString();
+  } catch (error) {
+    return undefined;
+  }
+}
+
 const updateLastProcessed = async (blockHeight: number, txid: string): Promise<void> => {
   await db.put('last-processed-blockheight', blockHeight.toString());
   await db.put('last-processed-txid', txid);
 }
 
-const getLastProcessedBlock = async (): Promise<number> => {
-  return Number(await db.get('last-processed-blockheight'));
+const getLastProcessedBlock = async (): Promise<number | undefined> => {
+  try {
+    const lastProcessedBlockHeight = await db.get('last-processed-blockheight');
+    return Number(lastProcessedBlockHeight);
+  } catch (error) {
+    return undefined;
+  }
 }
 
 const dumpLeveldb = (): void => {
@@ -20,6 +38,8 @@ const dumpLeveldb = (): void => {
 }
 
 export {
+  storeProcessedTxid,
+  getTweetIdByTxid,
   dumpLeveldb,
   updateLastProcessed,
   getLastProcessedBlock,

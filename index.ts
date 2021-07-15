@@ -1,18 +1,4 @@
-import { getLastProcessedBlock, updateLastProcessed } from "./src/store/database";
-import { extractDexSwaps } from "./src/defichain/extract";
+import { loopWhaleWatch } from "./src/daemon";
 
-export const run = async (): Promise<void> => {
-
-  const lastProcessedBlock = await getLastProcessedBlock();
-
-  const swaps = await extractDexSwaps(lastProcessedBlock);
-
-  swaps.forEach(async swap => {
-    const { blockHeight, txid } = swap;
-    await updateLastProcessed(blockHeight, txid);
-  });
-}
-
-run().catch(e => console.error(e)).then(() => {
-  console.log('beluga started');
-})
+loopWhaleWatch();
+console.log('beluga started');
