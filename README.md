@@ -6,7 +6,7 @@ If you have suggestions, please submit an [issue](https://github.com/benzumbrunn
 
 TODO:
 - [x] POC
-- [ ] All DEX movements
+- [x] All DEX movements
 - [ ] Coin and token transfers
 - [ ] Liquidity mining events
 - [ ] On-chain data source
