@@ -8,5 +8,5 @@ TODO:
 - [x] POC
 - [ ] All DEX movements
 - [ ] Coin and token transfers
-- [ ] Liquidtiy mining events
+- [ ] Liquidity mining events
 - [ ] On-chain data source
