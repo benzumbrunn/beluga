@@ -4,13 +4,13 @@ import { Swap } from "../types/Swap";
 
 const usdThreshold: number = config.get('usdThreshold');
 
-const dexSwapIsOverThreshold = async (swap: Swap, dfiUsdPrice: number): Promise<number | null> => {
+const dexSwapIsOverThreshold = async (swap: Swap, dfiUsdPrice: number): Promise<BigNumber | null> => {
   const dfiAmount = getDfiAmount(swap);
 
   const usdValue = dfiAmount * dfiUsdPrice;
 
   if (usdValue && usdValue >= usdThreshold) {
-    return new BigNumber(usdValue).decimalPlaces(0, BigNumber.ROUND_DOWN).toNumber();
+    return new BigNumber(usdValue).decimalPlaces(0, BigNumber.ROUND_DOWN);
   }
 
   return null;

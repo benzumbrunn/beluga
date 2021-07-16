@@ -1,8 +1,13 @@
+import config from 'config';
+
 import { getLastProcessedBlock, getTweetIdByTxid, storeProcessedTxid, updateLastProcessed } from "../src/store/database";
 import { dexSwapIsOverThreshold } from "./process/dexSwapIsOverThreshold";
 import { extractDexSwaps } from "./process/extractSwaps";
 import { getUsdCoinPriceForDfi } from "./query/coinPrices";
-import { tweet } from '../src/twitter/twitter';
+import { formatTweet } from './twitter/formatTweet';
+import { tweet } from './twitter/tweet';
+
+const watchIntervalInSeconds: number = config.get('watchIntervalInSeconds');
 
 const whaleWatch = async (): Promise<void> => {
   const lastProcessedBlock = await getLastProcessedBlock();
@@ -35,14 +40,9 @@ const whaleWatch = async (): Promise<void> => {
       return;
     }
 
-    const { baseTokenSymbol, baseTokenAmount, quoteTokenSymbol, quoteTokenAmount } = swap;
-
-    const infoMsg = `${baseTokenAmount} #${baseTokenSymbol} swapped to ${quoteTokenAmount} #${quoteTokenSymbol}`;
-    const valueMsg = `\nValue: ${usdValue} USD`;
-    const txidMsg = `\n\n${txid}`
-    const message = infoMsg.concat(valueMsg).concat(txidMsg);
-    const newTweetId = await tweet(message);
-    console.log(message);
+    const formattedTweet = formatTweet(swap, usdValue);
+    const newTweetId = await tweet(formattedTweet);
+    console.log(formattedTweet);
 
     await storeProcessedTxid(txid, newTweetId);
     await updateLastProcessed(blockHeight, txid);
@@ -56,7 +56,7 @@ const loopWhaleWatch = (): void => {
     } catch (error) {
       console.error(error);
     }
-  }, 10 * 1000); // every 10 seconds
+  }, watchIntervalInSeconds * 1000);
 };
 
 export {

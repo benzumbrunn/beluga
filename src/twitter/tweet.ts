@@ -21,8 +21,12 @@ const tweet = async (status: string): Promise<string> => {
     status,
   }
 
-  const response = await client.post('statuses/update', params);
-  return response.id_str;
+  if (process.env.NODE_ENV === 'production') {
+    const response = await client.post('statuses/update', params);
+    return response.id_str;
+  }
+
+  return '';
 }
 
 

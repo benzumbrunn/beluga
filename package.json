@@ -6,6 +6,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "NODE_ENV=production npm run build && node dist/index.js",
+    "dev": "NODE_ENV=development tsc-watch -p tsconfig.json --onSuccess \"node dist/index.js\"",
     "test": "NODE_ENV=test jest",
     "lint": "eslint . --ext .ts",
     "dump-leveldb": "npm run build && node ./dist/src/scripts/dump-leveldb.js"
@@ -51,6 +52,7 @@
     "eslint": "^7.30.0",
     "jest": "^27.0.6",
     "ts-node": "^10.1.0",
+    "tsc-watch": "^4.4.0",
     "typescript": "^4.3.5"
   }
 }
