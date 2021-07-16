@@ -6,7 +6,7 @@ If you have suggestions, please submit an issue:
 https://github.com/benzumbrunn/beluga/issues
 
 TODO:
-- [ ] POC
+- [x] POC
 - [ ] All DEX pools
 - [ ] Coin and token transfers
 - [ ] Liquidtiy mining events
