@@ -1,13 +1,12 @@
 # beluga
 
-Posts to https://twitter.com/dfi_whale_alert
+Posts to [twitter.com/dfi_whale_alert](https://twitter.com/dfi_whale_alert).
 
-If you have suggestions, please submit an issue:
-https://github.com/benzumbrunn/beluga/issues
+If you have suggestions, please submit an [issue](https://github.com/benzumbrunn/beluga/issues).
 
 TODO:
 - [x] POC
-- [ ] All DEX pools
+- [ ] All DEX movements
 - [ ] Coin and token transfers
 - [ ] Liquidtiy mining events
 - [ ] On-chain data source
