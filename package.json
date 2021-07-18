@@ -10,7 +10,7 @@
     "test": "export NODE_ENV=test && jest",
     "lint": "eslint . --ext .ts",
     "dump-leveldb": "npm run build && node ./dist/src/scripts/dump-leveldb.js",
-    "send-test-tweet": "export NODE_ENV=production npm run build && node ./dist/src/scripts/send-test-tweet.js"
+    "send-test-tweet": "export NODE_ENV=production && npm run build && node ./dist/src/scripts/send-test-tweet.js"
   },
   "repository": {
     "type": "git",
