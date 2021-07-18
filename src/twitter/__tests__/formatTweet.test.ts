@@ -3,7 +3,7 @@ import BigNumber from "bignumber.js";
 import { Swap } from "../../types/Swap";
 import { formatTweet } from "../formatTweet";
 
-test('extract DEX swaps from API, excluding processed blocks', async () => {
+test('Build correct string from swap to send to twitter', async () => {
   const swap: Swap = {
     baseTokenAmount: 1.32145234,
     quoteTokenAmount: 98462.12398987,
@@ -23,7 +23,7 @@ test('extract DEX swaps from API, excluding processed blocks', async () => {
   const res = formatTweet(swap, usdValue);
 
   expect(res).toStrictEqual(`1.32145234 #BTC swapped to 98,462.12398987 #DFI
-Value: 123,456.789 USD
+🐟 Value: 123,456.789 USD
 
 349853453450`);
 });
