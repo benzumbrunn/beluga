@@ -1,8 +1,8 @@
 import { extractDexSwaps } from "../extractSwaps";
 
-jest.mock('../../query/dfc-api')
+jest.mock('../../query/dfcApi');
 
-test('extract DEX swaps from API, excluding processed blocks', async () => {
+test.skip('extract DEX swaps from API, excluding processed blocks', async () => {
   const res = await extractDexSwaps(998530);
 
   expect(res).toStrictEqual([

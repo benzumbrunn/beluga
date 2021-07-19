@@ -1,8 +1,8 @@
 const config = {
   verbose: true,
   testPathIgnorePatterns: [
-    "/node_modules/",
-    "/dist/"
+    "<rootDir>/node_modules/",
+    "<rootDir>/dist/"
   ],
 };
 
