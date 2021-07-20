@@ -1,0 +1,11 @@
+{
+  "usdThreshold": 50000,
+  "watchIntervalInSeconds": 30,
+  "twitter": {
+    "apiKey": "",
+    "apiSecretKey": "",
+    "bearerToken": "",
+    "accessToken": "",
+    "accessTokenSecret": ""
+  }
+}

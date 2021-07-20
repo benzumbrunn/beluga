@@ -3,4 +3,5 @@ dist/
 logs/
 processed/
 
-config/local.js
+config/local.json
+config/production.json
