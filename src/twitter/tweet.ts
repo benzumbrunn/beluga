@@ -26,7 +26,7 @@ const tweet = async (status: string): Promise<string> => {
     return response.id_str;
   }
 
-  return '';
+  return status;
 }
 
 

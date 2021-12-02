@@ -1,6 +1,6 @@
 import config from 'config';
 
-import { getLastProcessedBlock, getTweetIdByTxid, storeProcessedTxid, updateLastProcessed } from "../src/store/database";
+import { getTweetIdByTxid, storeProcessedTxid, updateLastProcessed } from "../src/store/database";
 import { dexSwapIsOverThreshold } from "./process/dexSwapIsOverThreshold";
 import { extractDexSwaps } from "./process/extractSwaps";
 import { getUsdCoinPriceForDfi } from "./query/coinPrices";
@@ -10,9 +10,7 @@ import { tweet } from './twitter/tweet';
 const watchIntervalInSeconds: number = config.get('watchIntervalInSeconds');
 
 const whaleWatch = async (): Promise<void> => {
-  const lastProcessedBlock = await getLastProcessedBlock();
-
-  const swaps = await extractDexSwaps(lastProcessedBlock);
+  const swaps = await extractDexSwaps();
 
   if (swaps.length === 0) {
     console.log('No new swaps');
@@ -28,7 +26,7 @@ const whaleWatch = async (): Promise<void> => {
 
     if (!usdValue) {
       // swap below noteworthy threshold
-      console.log('Swap below noteworthy threshold', txid);
+      // console.log('Swap below noteworthy threshold', txid);
       await updateLastProcessed(swap.blockHeight, txid);
       return;
     }
@@ -36,6 +34,7 @@ const whaleWatch = async (): Promise<void> => {
     const tweetIdFromTxid = await getTweetIdByTxid(txid);
     if (tweetIdFromTxid) {
       // txid already processed via tweet
+      console.log('Swap already processed via tweet', txid);
       await updateLastProcessed(blockHeight, txid);
       return;
     }
