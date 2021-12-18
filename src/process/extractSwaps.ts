@@ -27,15 +27,14 @@ const POOL_IDS = [
   '46', // SLV-DUSD
 ];
 
-const extractDexSwaps = async (lastProcessedBlock?: number): Promise<Swap[]> => {
+const extractDexSwaps = async (): Promise<Swap[]> => {
 
   const swaps = await Promise.all(POOL_IDS.map(id => {
     return getLatestSwapTransactions(id, '100');
   }));
 
   const sortedSwaps = new Array<Swap>().concat(...swaps).sort((a, b) => a.blockHeight - b.blockHeight);
-  const swapsAfterLastProcessed = lastProcessedBlock ? sortedSwaps.filter(s => s.blockHeight > lastProcessedBlock) : sortedSwaps;
-  return swapsAfterLastProcessed
+  return sortedSwaps;
 }
 
 export {

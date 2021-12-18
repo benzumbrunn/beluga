@@ -3,7 +3,7 @@ import { extractDexSwaps } from "../extractSwaps";
 jest.mock('../../query/dfcApi');
 
 test.skip('extract DEX swaps from API, excluding processed blocks', async () => {
-  const res = await extractDexSwaps(998530);
+  const res = await extractDexSwaps();
 
   expect(res).toStrictEqual([
       {
