@@ -22,7 +22,7 @@ test('Build correct string from swap to send to twitter', async () => {
 
   const res = formatTweet(swap, usdValue);
 
-  expect(res).toStrictEqual(`1.32145234 #BTC swapped to 98,462.12398987 #DFI
+  expect(res).toStrictEqual(`1.32145234 $BTC swapped to 98,462.12398987 $DFI
 🐟 Value: 123,456.789 USD
 
 349853453450`);
