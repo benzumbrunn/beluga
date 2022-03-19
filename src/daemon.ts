@@ -3,7 +3,7 @@ import config from 'config';
 import { getTweetIdByTxid, storeProcessedTxid, updateLastProcessed } from "../src/store/database";
 import { dexSwapIsOverThreshold } from "./process/dexSwapIsOverThreshold";
 import { extractDexSwaps } from "./process/extractSwaps";
-import { getUsdCoinPriceForDfi } from "./query/coinPrices";
+import { getTokenPrices } from './query/dfcApi';
 import { formatTweet } from './twitter/formatTweet';
 import { tweet } from './twitter/tweet';
 
@@ -11,31 +11,32 @@ const watchIntervalInSeconds: number = config.get('watchIntervalInSeconds');
 
 const whaleWatch = async (): Promise<void> => {
   const swaps = await extractDexSwaps();
+  console.log(swaps.length);
 
   if (swaps.length === 0) {
     console.log('No new swaps');
     return;
   }
 
-  const dfiUsdPrice = await getUsdCoinPriceForDfi();
+  const tokenPricesInUsd = await getTokenPrices();
 
   swaps.forEach(async swap => {
-    const usdValue = await dexSwapIsOverThreshold(swap, dfiUsdPrice);
+    const usdValue = await dexSwapIsOverThreshold(swap, tokenPricesInUsd);
 
-    const { blockHeight, txid } = swap;
+    const { timestamp, id } = swap;
 
     if (!usdValue) {
       // swap below noteworthy threshold
       // console.log('Swap below noteworthy threshold', txid);
-      await updateLastProcessed(swap.blockHeight, txid);
+      await updateLastProcessed(Number(swap.timestamp), id);
       return;
     }
 
-    const tweetIdFromTxid = await getTweetIdByTxid(txid);
+    const tweetIdFromTxid = await getTweetIdByTxid(id);
     if (tweetIdFromTxid) {
       // txid already processed via tweet
-      console.log('Swap already processed via tweet', txid);
-      await updateLastProcessed(blockHeight, txid);
+      console.log('Swap already processed via tweet', id);
+      await updateLastProcessed(Number(timestamp), id);
       return;
     }
 
@@ -43,8 +44,8 @@ const whaleWatch = async (): Promise<void> => {
     const newTweetId = await tweet(formattedTweet);
     console.log(formattedTweet);
 
-    await storeProcessedTxid(txid, newTweetId);
-    await updateLastProcessed(blockHeight, txid);
+    await storeProcessedTxid(id, newTweetId);
+    await updateLastProcessed(Number(timestamp), id);
   });
 }
 
