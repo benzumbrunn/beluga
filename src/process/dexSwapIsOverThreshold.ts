@@ -1,33 +1,18 @@
 import BigNumber from 'bignumber.js';
 import config from 'config';
-import { Swap } from "../types/Swap";
+import { SubgraphSwap } from '../types/SubgraphSwap';
 
 const usdThreshold: number = config.get('usdThreshold');
 
-const dexSwapIsOverThreshold = async (swap: Swap, dfiUsdPrice: number): Promise<BigNumber | null> => {
-  const usdValue = getUsdValue(swap, dfiUsdPrice);
+const dexSwapIsOverThreshold = async (swap: SubgraphSwap, tokenPricesInUsd: {[x: string]: string}): Promise<BigNumber | null> => {
+  const usdPrice = tokenPricesInUsd[swap.from.symbol];
+  const usdValue = new BigNumber(usdPrice).multipliedBy(swap.from.amount);
 
-  if (usdValue && usdValue >= usdThreshold) {
+  if (usdValue && Number(usdValue) >= usdThreshold) {
     return new BigNumber(usdValue).decimalPlaces(2, BigNumber.ROUND_DOWN);
   }
 
   return null;
-}
-
-const getUsdValue = (swap: Swap, dfiUsdPrice: number) => {
-  if (swap.baseTokenSymbol === 'DUSD') {
-    return swap.baseTokenAmount;
-  }
-  if (swap.quoteTokenSymbol === 'DUSD') {
-    return swap.quoteTokenAmount;
-  }
-  if (swap.baseTokenSymbol === 'DFI') {
-    return swap.baseTokenAmount * dfiUsdPrice;
-  }
-  if (swap.quoteTokenSymbol === 'DFI') {
-    return swap.quoteTokenAmount * dfiUsdPrice;
-  }
-  throw new Error(`None of the symbols are DFI or DUSD: ${JSON.stringify(swap)}`);
 }
 
 export {
