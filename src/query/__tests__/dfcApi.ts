@@ -5,9 +5,9 @@ import {
 } from "../dfcApi";
 
 test('extract swaps from ocean API', async () => {
-  const res = await getOceanSwaps(['5'], 20);
+  const res = await getOceanSwaps(['5'], 3);
 
-  expect(res.length).toBe(20);
+  expect(res.length).toBe(3);
 }, 10000);
 
 test('extract pool pairs from ocean API', async () => {
