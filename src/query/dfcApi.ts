@@ -1,28 +1,35 @@
 import axios from "axios";
+import { OceanSwap, OceanSwapResponse } from "../types/OceanSwap";
 import { PriceTicker } from "../types/Price";
-import { SubgraphSwap, SubgraphSwapsResponse } from "../types/SubgraphSwap";
 
-const getSubgraphSwaps = async (entriesToFetch = 300): Promise<SubgraphSwap[]> => {
-  const swaps = [];
-
-  try {
-    // 30 entries are the max for this endpoint, so fetch until desired number is reached
-    let lastResponseData: SubgraphSwapsResponse | null = null;
-    for (let i = 0; i < entriesToFetch; i += 30) {
-      const params = lastResponseData ? `?next=${(lastResponseData as SubgraphSwapsResponse).page!.next}` : '';
-      const response = await axios.get(`https://api.defichain.com/v1/getsubgraphswaps${params}`);
-      const responseData: SubgraphSwapsResponse = response.data;
-      swaps.push(...responseData.data.swaps);
-      lastResponseData = responseData;
-    }
-    return swaps;
-  } catch (err) {
-    console.error(err.response.statusText);
-    throw new Error(err.response.statusText);
-  }
+const getOceanPoolPairs = async (): Promise<string[]> => {
+  const response: { data: { data: [{ id: string }] } } = await axios.get('https://ocean.defichain.com/v0/mainnet/poolpairs?size=200');
+  return response.data.data.map(pair => pair.id);
 }
 
-const getTokenPrices = async (): Promise<({[x: string]: string})> => {
+const getOceanSwaps = async (pools: string[], numberOfSwapsToFetch: number): Promise<OceanSwap[]> => {
+  const allSwaps: OceanSwap[] = [];
+  for (const pool of pools) {
+    // limitaion: can only fetch 20 entries for now. If more needed, use paging 
+    const response = await axios.get(`https://ocean.defichain.com/v0/mainnet/poolpairs/${pool}/swaps/verbose?size=${numberOfSwapsToFetch}`);
+    const data: OceanSwapResponse = response.data.data;
+    for (const swap of data) {
+      if (swap.to) { // not pending anymore
+        allSwaps.push({
+          id: swap.txid,
+          timestamp: String(swap.block.time),
+          fromSymbol: swap.from.symbol,
+          fromAmount: swap.from.amount,
+          toSymbol: swap.to.symbol,
+          toAmount: swap.to.amount,
+        });
+      }
+    }
+  }
+  return allSwaps;
+}
+
+const getTokenPrices = async (): Promise<({ [x: string]: string })> => {
   try {
     const response = await axios.get(`https://ocean.defichain.com/v0/mainnet/prices`);
     const data: PriceTicker[] = response.data.data;
@@ -30,13 +37,14 @@ const getTokenPrices = async (): Promise<({[x: string]: string})> => {
       acc[curr.price.token] = curr.price.aggregated.amount;
       return acc;
     }, {});
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
     throw new Error(err);
   }
 }
 
 export {
-  getSubgraphSwaps,
+  getOceanPoolPairs,
   getTokenPrices,
+  getOceanSwaps,
 }

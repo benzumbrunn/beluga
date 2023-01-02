@@ -1,10 +1,10 @@
 import BigNumber from "bignumber.js";
-import { SubgraphSwap } from "../types/SubgraphSwap";
+import { OceanSwap } from "../types/OceanSwap";
 import { getEmojiFromValue } from "./getEmojiFromValue";
 
-const formatTweet = (swap: SubgraphSwap, usdValue: BigNumber): string => {
+const formatTweet = (swap: OceanSwap, usdValue: BigNumber): string => {
   const emoji = getEmojiFromValue(usdValue);
-  const infoMsg = `${new BigNumber(swap.from.amount).toFormat()} $${swap.from.symbol} swapped to ${new BigNumber(swap.to.amount).toFormat()} $${swap.to.symbol}`;
+  const infoMsg = `${new BigNumber(swap.fromAmount).toFormat()} $${swap.fromSymbol} swapped to ${new BigNumber(swap.toAmount).toFormat()} $${swap.toSymbol}`;
   const valueMsg = `\n${emoji} Value: ${usdValue.toFormat()} USD`;
   const txidMsg = `\n\n${swap.id}`
   return infoMsg.concat(valueMsg).concat(txidMsg);
