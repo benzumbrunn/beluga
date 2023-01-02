@@ -1,9 +1,19 @@
-import { getSubgraphSwaps, getTokenPrices } from "../dfcApi";
+import { 
+  getOceanPoolPairs, 
+  getOceanSwaps, 
+  getTokenPrices 
+} from "../dfcApi";
 
-test('extract swaps from defichain subgraph API', async () => {
-  const res = await getSubgraphSwaps(60);
+test('extract swaps from ocean API', async () => {
+  const res = await getOceanSwaps(['5'], 20);
 
-  expect(res.length).toBe(60);
+  expect(res.length).toBe(20);
+}, 10000);
+
+test('extract pool pairs from ocean API', async () => {
+  const res = await getOceanPoolPairs();
+
+  expect(res.length).toBeGreaterThan(60);
 }, 10000);
 
 test('extract DFC DEX token prices', async () => {

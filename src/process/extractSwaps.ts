@@ -1,12 +1,13 @@
 import config from 'config';
-import { getSubgraphSwaps } from "../query/dfcApi";
-import { SubgraphSwap } from "../types/SubgraphSwap";
+import { getOceanPoolPairs, getOceanSwaps } from "../query/dfcApi";
+import { OceanSwap } from '../types/OceanSwap';
 
 const numberOfSwapsToFetch: number = config.get('numberOfSwapsToFetch');
 
-const extractDexSwaps = async (): Promise<SubgraphSwap[]> => {
+const extractDexSwaps = async (): Promise<OceanSwap[]> => {
 
-  const swaps = await getSubgraphSwaps(numberOfSwapsToFetch);
+  const pools = await getOceanPoolPairs();
+  const swaps = await getOceanSwaps(pools, numberOfSwapsToFetch);
   return swaps;
 }
 

@@ -1,7 +1,7 @@
 {
   "usdThreshold": 100000,
   "watchIntervalInSeconds": 30,
-  "numberOfSwapsToFetch": 120,
+  "numberOfSwapsToFetch": 20,
   "twitter": {
     "apiKey": "",
     "apiSecretKey": "",

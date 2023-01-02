@@ -1,17 +1,13 @@
-import { SubgraphSwap } from "../../types/SubgraphSwap";
+import { OceanSwap } from "../../types/OceanSwap";
 import { dexSwapIsOverThreshold } from "../dexSwapIsOverThreshold";
 
-const swap: SubgraphSwap = {
+const swap: OceanSwap = {
   id: "160c3b4b53716784838ab779fafa4f2a622fa41ee58336e0dc2d86aedbc5eb5a",
   timestamp: "1647661211",
-  from: {
-    amount: "1000",
-    symbol: "TWTR"
-  },
-  to: {
-    amount: "100000",
-    symbol: "DUSD"
-  }
+  fromAmount: "1000",
+  fromSymbol: "TWTR",
+  toAmount: "100000",
+  toSymbol: "DUSD"
 };
 
 test('check if dex swap is over USD threshold', async () => {
