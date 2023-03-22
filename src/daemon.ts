@@ -3,7 +3,7 @@ import config from 'config';
 import { getTweetIdByTxid, storeProcessedTxid, updateLastProcessed } from "../src/store/database";
 import { dexSwapIsOverThreshold } from "./process/dexSwapIsOverThreshold";
 import { extractDexSwaps } from "./process/extractSwaps";
-import { getTokenPrices } from './query/dfcApi';
+import { getCoinPrices, getTokenPrices } from './query/dfcApi';
 import { formatTweet } from './twitter/formatTweet';
 import { tweet } from './twitter/tweet';
 
@@ -18,16 +18,17 @@ const whaleWatch = async (): Promise<void> => {
     return;
   }
 
-  const tokenPricesInUsd = await getTokenPrices();
+  const dfcTokenPricesInUsd = await getTokenPrices();
+  const coinPricesInUsd = await getCoinPrices();
+  const prices = { ...dfcTokenPricesInUsd, ...coinPricesInUsd };
 
   swaps.forEach(async swap => {
-    const usdValue = await dexSwapIsOverThreshold(swap, tokenPricesInUsd);
+    const usdValue = await dexSwapIsOverThreshold(swap, prices);
 
     const { timestamp, id } = swap;
 
     if (!usdValue) {
       // swap below noteworthy threshold
-      // console.log('Swap below noteworthy threshold', txid);
       await updateLastProcessed(Number(swap.timestamp), id);
       return;
     }

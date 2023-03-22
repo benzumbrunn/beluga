@@ -10,7 +10,7 @@ const getOceanPoolPairs = async (): Promise<string[]> => {
 const getOceanSwaps = async (pools: string[], numberOfSwapsToFetch: number): Promise<OceanSwap[]> => {
   const allSwaps: OceanSwap[] = [];
   for (const pool of pools) {
-    // limitaion: can only fetch 20 entries for now. If more needed, use paging 
+    // limitation: can only fetch 20 entries for now. If more needed, use paging 
     const response = await axios.get(`https://ocean.defichain.com/v0/mainnet/poolpairs/${pool}/swaps/verbose?size=${numberOfSwapsToFetch}`);
     const data: OceanSwapResponse = response.data.data;
     for (const swap of data) {
@@ -43,8 +43,40 @@ const getTokenPrices = async (): Promise<({ [x: string]: string })> => {
   }
 }
 
+// const getCoinPrices = async (): Promise<({ [x: string]: string })> => {
+const getCoinPrices = async (): Promise<({ [x: string]: string })> => {
+  const coinNameToId: { [x: string]: string } = {
+    'bitcoin': 'BTC', 
+    'ethereum': 'ETH',
+    'dogecoin': 'DOGE',
+    'usd-coin': 'USDC',
+    'tether': 'USDT',
+    'bitcoin-cash': 'BCH',
+    'litecoin': 'LTC',
+    'defichain': 'DFI',
+    'euro-coin': 'EUROC',
+    'decentralized-usd': 'DUSD',
+  };
+
+  const coinIds = [
+    'bitcoin', 'ethereum', 'dogecoin',
+    'usd-coin', 'tether', 'bitcoin-cash',
+    'litecoin', 'defichain', 'euro-coin',
+    'decentralized-usd',
+  ].join('%2C');
+
+  const response = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${coinIds}&vs_currencies=usd`);
+
+  const coinPrices: { [x: string]: { usd: number} } = response.data;
+  return Object.entries(coinPrices).reduce((acc: { [x: string]: string }, cum) => {
+    acc[coinNameToId[cum[0]]] = cum[1].usd.toString();
+    return acc;
+}, {});
+}
+
 export {
   getOceanPoolPairs,
   getTokenPrices,
   getOceanSwaps,
+  getCoinPrices,
 }
