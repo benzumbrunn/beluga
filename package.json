@@ -10,7 +10,8 @@
     "test": "NODE_ENV=test jest",
     "lint": "eslint . --ext .ts",
     "dump-leveldb": "npm run build && node ./dist/src/scripts/dump-leveldb.js",
-    "send-test-tweet": "npm run build && NODE_ENV=production node ./dist/src/scripts/send-test-tweet.js"
+    "send-test-tweet": "npm run build && NODE_ENV=production node ./dist/src/scripts/send-test-tweet.js",
+    "crawl-swaps": "npm run build && NODE_ENV=development node ./dist/src/scripts/crawl-swaps.js"
   },
   "repository": {
     "type": "git",

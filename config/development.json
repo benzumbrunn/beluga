@@ -1,5 +1,5 @@
 {
-  "usdThreshold": 10000,
-  "watchIntervalInSeconds": 5,
-  "numberOfSwapsToFetch": 20
+  "usdThreshold": 100000,
+  "watchIntervalInSeconds": 15,
+  "numberOfSwapsToFetch": 40
 }
